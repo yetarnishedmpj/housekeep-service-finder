@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; manifest-src 'none'; upgrade-insecure-requests"
+    />
+    <meta
+      name="description"
+      content="An unofficial prototype that helps customers choose the closest Housekeep service and prepare for the official quote flow."
+    />
+    <title>Housekeep Service Finder — Unofficial Demo</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#finder-title">Skip to the service finder</a>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Housekeep Service Finder home">
+        <img src="mark.svg" alt="" width="38" height="38" />
+        <span>
+          <strong>Housekeep service guide</strong>
+          <small>Independent selector</small>
+        </span>
+      </a>
+      <div class="header-actions">
+        <button class="header-button" id="compare-open" type="button">Service comparison</button>
+        <a class="source-link" href="https://housekeep.com/" target="_blank" rel="noopener noreferrer">
+          Housekeep website <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="finder-shell" aria-labelledby="finder-title">
+        <aside class="progress-panel">
+          <p class="progress-label">Your progress</p>
+          <h2 id="finder-title">Choose, describe, check</h2>
+          <ol class="step-list" aria-label="Progress">
+            <li class="step-item is-active" data-progress="1" aria-current="step">
+              <span>1</span>
+              <div><strong>What you need</strong><small>Describe the job</small></div>
+            </li>
+            <li class="step-item" data-progress="2">
+              <span>2</span>
+              <div><strong>Useful details</strong><small>Property and timing</small></div>
+            </li>
+            <li class="step-item" data-progress="3">
+              <span>3</span>
+              <div><strong>Your plan</strong><small>Recommendation and link</small></div>
+            </li>
+          </ol>
+          <div class="privacy-note">
+            <strong>Nothing is submitted here</strong>
+            <p>Use the first part of your postcode if you prefer. Add contact or payment details only after reaching Housekeep’s website.</p>
+          </div>
+        </aside>
+
+        <div class="flow-panel">
+          <div class="step-view is-visible" data-step="1">
+            <div class="section-heading">
+              <p class="step-kicker">1 — The job</p>
+              <h2 data-step-title tabindex="-1">What do you need help with?</h2>
+              <p>Choose the nearest description. It does not have to be exact.</p>
+            </div>
+
+            <div class="intent-grid" role="group" aria-label="Type of service needed">
+              <button class="intent-card" type="button" data-intent="regular" aria-pressed="false">
+                <span class="intent-icon">01</span><strong>Regular cleaning</strong><small>Daily, weekly or fortnightly visits</small>
+              </button>
+              <button class="intent-card" type="button" data-intent="oneOff" aria-pressed="false">
+                <span class="intent-icon">02</span><strong>One-off cleaning</strong><small>A standard clean on one occasion</small>
+              </button>
+              <button class="intent-card" type="button" data-intent="deep" aria-pressed="false">
+                <span class="intent-icon">03</span><strong>Deep cleaning</strong><small>Heavy grime, grease or limescale</small>
+              </button>
+              <button class="intent-card" type="button" data-intent="moving" aria-pressed="false">
+                <span class="intent-icon">04</span><strong>Moving home</strong><small>An empty property before or after a move</small>
+              </button>
+              <button class="intent-card" type="button" data-intent="builders" aria-pressed="false">
+                <span class="intent-icon">05</span><strong>After building work</strong><small>Dust and residue after renovation</small>
+              </button>
+              <button class="intent-card" type="button" data-intent="fabric" aria-pressed="false">
+                <span class="intent-icon">06</span><strong>Carpet or upholstery</strong><small>Carpets, rugs or fabric furniture</small>
+              </button>
+              <button class="intent-card" type="button" data-intent="trades" aria-pressed="false">
+                <span class="intent-icon">07</span><strong>Repair or maintenance</strong><small>Plumbing, electrical and other trades</small>
+              </button>
+              <button class="intent-card" type="button" data-intent="unsure" aria-pressed="false">
+                <span class="intent-icon">08</span><strong>Not sure</strong><small>Describe the work in your own words</small>
+              </button>
+            </div>
+
+            <label class="field full-width" for="job-notes">
+              <span>Anything else we should know? <em>optional</em></span>
+              <textarea
+                id="job-notes"
+                rows="4"
+                maxlength="1200"
+                aria-describedby="notes-guidance notes-count intent-error"
+                placeholder="Example: I am moving out of an empty two-bedroom flat and need the oven, cupboards and inside windows cleaned."
+              ></textarea>
+              <span class="field-meta"><small id="notes-guidance">Do not enter contact, payment-card or security-code details.</small><small id="notes-count">0 / 1,200</small></span>
+              <small id="intent-error" class="field-error" role="alert"></small>
+            </label>
+
+            <div id="route-preview" class="route-preview" role="status" aria-live="polite" hidden>
+              <span class="route-preview-icon" id="route-preview-icon" aria-hidden="true">→</span>
+              <div><small>Likely service</small><strong id="route-preview-name">One-off standard cleaning</strong><p id="route-preview-reason"></p></div>
+            </div>
+
+            <div class="flow-actions align-right">
+              <button class="primary-button" type="button" id="to-details">Continue <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+
+          <div class="step-view" data-step="2">
+            <div class="section-heading">
+              <p class="step-kicker">2 — The details</p>
+              <h2 data-step-title tabindex="-1">A little more about the job</h2>
+              <p>We only ask for details that may change the service recommendation.</p>
+            </div>
+
+            <div class="form-grid">
+              <label class="field" for="postcode">
+                <span>Postcode or area</span>
+                <input id="postcode" autocomplete="postal-code" maxlength="80" aria-describedby="postcode-help postcode-error" placeholder="e.g. SW11 or Manchester" />
+                <small id="postcode-help">Use only the first part of your postcode if you prefer.</small>
+                <small id="postcode-error" class="field-error" role="alert"></small>
+              </label>
+              <label class="field" for="timeframe">
+                <span>Preferred timing</span>
+                <select id="timeframe">
+                  <option value="">Choose a timeframe</option>
+                  <option>As soon as possible</option>
+                  <option>Within the next 7 days</option>
+                  <option>Within the next month</option>
+                  <option>On a specific date</option>
+                  <option>Just researching</option>
+                </select>
+              </label>
+
+              <div id="cleaning-fields" class="form-grid nested-grid">
+                <label class="field" for="property-type">
+                  <span>Property type</span>
+                  <select id="property-type">
+                    <option value="">Choose property type</option>
+                    <option>Flat</option>
+                    <option>House</option>
+                    <option>Office</option>
+                    <option>Other property</option>
+                  </select>
+                </label>
+                <label class="field" for="occupancy">
+                  <span>Current condition</span>
+                  <select id="occupancy">
+                    <option value="">Choose the closest description</option>
+                    <option value="occupied">Occupied and normally maintained</option>
+                    <option value="heavy">Occupied with heavy grime or limescale</option>
+                    <option value="emptyMove">Empty for a move</option>
+                    <option value="buildingDust">Affected by renovation or building dust</option>
+                  </select>
+                </label>
+                <label class="field" for="bedrooms">
+                  <span>Bedrooms</span>
+                  <select id="bedrooms">
+                    <option value="">Not specified</option><option>Studio</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option>
+                  </select>
+                </label>
+                <label class="field" for="bathrooms">
+                  <span>Bathrooms</span>
+                  <select id="bathrooms">
+                    <option value="">Not specified</option><option>1</option><option>2</option><option>3</option><option>4+</option>
+                  </select>
+                </label>
+                <label class="field" id="frequency-field" for="frequency">
+                  <span>Preferred frequency</span>
+                  <select id="frequency">
+                    <option value="">Choose frequency</option>
+                    <option>Daily</option><option>Weekly</option><option>Fortnightly</option><option>One time only</option>
+                  </select>
+                </label>
+                <fieldset class="field extras-field">
+                  <legend>Extra tasks</legend>
+                  <div class="check-grid">
+                    <label><input type="checkbox" value="Ironing" /> Ironing</label>
+                    <label><input type="checkbox" value="Laundry" /> Laundry</label>
+                    <label><input type="checkbox" value="Dishes" /> Dishes</label>
+                    <label><input type="checkbox" value="Inside oven" /> Inside oven</label>
+                    <label><input type="checkbox" value="Inside fridge/freezer" /> Inside fridge/freezer</label>
+                    <label><input type="checkbox" value="Inside cupboards" /> Inside cupboards</label>
+                    <label><input type="checkbox" value="Inside windows" /> Inside windows</label>
+                    <label><input type="checkbox" value="Carpet or upholstery stains" /> Fabric stains</label>
+                  </div>
+                </fieldset>
+              </div>
+
+              <div id="trade-fields" class="form-grid nested-grid is-hidden">
+                <label class="field" for="trade-type">
+                  <span>Type of tradesperson</span>
+                  <select id="trade-type">
+                    <option value="">Let the finder choose</option>
+                    <option>Plumber</option><option>Electrician</option><option>Handyman</option><option>Gardener</option>
+                    <option>Carpenter</option><option>Painter & decorator</option><option>Appliance engineer</option>
+                    <option>Gas & heating engineer</option><option>Locksmith</option><option>Drainage specialist</option>
+                    <option>Builder</option><option>Removals</option><option>Waste removal</option>
+                  </select>
+                </label>
+                <label class="field" for="urgency">
+                  <span>Urgency</span>
+                  <select id="urgency">
+                    <option value="">Choose urgency</option><option>Emergency or active damage</option><option>Urgent, within 48 hours</option><option>Flexible this week</option><option>Planned work</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+
+            <p id="details-error" class="field-error form-error" role="alert"></p>
+            <div class="flow-actions">
+              <button class="secondary-button" type="button" data-back="1"><span aria-hidden="true">←</span> Back</button>
+              <button class="primary-button" type="button" id="build-plan">Build my plan <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+
+          <div class="step-view" data-step="3">
+            <div class="result-header">
+              <div>
+                <p class="step-kicker">3 — Your summary</p>
+                <h2 id="result-title" data-step-title tabindex="-1">Service recommendation</h2>
+              </div>
+              <span class="confidence-badge">Recommended from your answers<span id="confidence-value" class="visually-hidden">—</span></span>
+            </div>
+
+            <aside id="emergency-alert" class="emergency-alert" role="alert" hidden>
+              <span aria-hidden="true">!</span>
+              <div><strong id="emergency-title"></strong><p id="emergency-message"></p></div>
+            </aside>
+
+            <div class="recommendation-card">
+              <div class="recommendation-main">
+                <span class="result-icon" id="result-icon" aria-hidden="true">—</span>
+                <div>
+                  <p class="result-label">Our suggestion</p>
+                  <h3 id="service-name"></h3>
+                  <p id="service-reason"></p>
+                  <ul id="evidence-list" class="evidence-list" aria-label="Reasons for this recommendation"></ul>
+                </div>
+              </div>
+              <div class="recommendation-note">
+                Final coverage, price, timing and inclusions are confirmed by Housekeep.
+              </div>
+            </div>
+
+            <section id="alternatives-section" class="alternatives-section" hidden>
+              <div><p class="step-kicker">Worth checking</p><h3>Other services that may fit</h3></div>
+              <div id="alternatives-list" class="alternatives-list"></div>
+            </section>
+
+            <div class="result-grid">
+              <section class="result-section">
+                <h3>Your booking brief</h3>
+                <dl id="brief-list"></dl>
+              </section>
+              <section class="result-section">
+                <h3>What to expect</h3>
+                <ul id="scope-list" class="tick-list"></ul>
+              </section>
+              <section class="result-section">
+                <h3>Before you continue</h3>
+                <ul id="prep-list" class="plain-list"></ul>
+              </section>
+              <section class="result-section next-step-section">
+                <h3>Next step</h3>
+                <p>Continue on Housekeep's official website to confirm availability and receive the current quote.</p>
+                <a id="official-link" class="primary-button wide-button" href="https://housekeep.com/" target="_blank" rel="noopener noreferrer">Continue to official quote <span aria-hidden="true">↗</span></a>
+                <button id="copy-plan" class="secondary-button wide-button" type="button">Copy booking brief</button>
+                <p id="copy-status" class="copy-status" role="status"></p>
+              </section>
+            </div>
+
+            <div class="flow-actions result-actions">
+              <button class="secondary-button" type="button" data-back="2"><span aria-hidden="true">←</span> Edit details</button>
+              <button class="text-button" type="button" id="start-over">Start over</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="evidence-section" aria-labelledby="evidence-title">
+        <div>
+          <p class="eyebrow">Before you book</p>
+          <h2 id="evidence-title">What this guide does—and does not do</h2>
+        </div>
+        <div class="evidence-grid">
+          <article><strong>Public information</strong><p>The service distinctions come from Housekeep’s public website.</p></article>
+          <article><strong>Relevant questions</strong><p>The guide asks about the property, timing and work only when those details affect the choice.</p></article>
+          <article><strong>Official confirmation</strong><p>Housekeep confirms the price, local coverage, appointment and payment on its own website.</p></article>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="compare-dialog" class="app-dialog" aria-labelledby="compare-title">
+      <div class="dialog-header">
+        <div><p class="step-kicker">Public service guide</p><h2 id="compare-title">Compare the main routes</h2></div>
+        <button class="icon-button" type="button" data-dialog-close="compare-dialog" aria-label="Close service comparison">×</button>
+      </div>
+      <p class="dialog-intro">These distinctions come from Housekeep's public website. Final coverage, price and inclusions are confirmed in the official quote flow.</p>
+      <div class="comparison-grid">
+        <article><span>01</span><div><strong>Regular cleaning</strong><p>Repeat upkeep in an occupied home: daily, weekly or fortnightly.</p></div></article>
+        <article><span>02</span><div><strong>One-off cleaning</strong><p>A single routine clean without specialist deep-clean requirements.</p></div></article>
+        <article><span>03</span><div><strong>Deep cleaning</strong><p>Intensive work for a lived-in home with grime, grease or limescale.</p></div></article>
+        <article><span>04</span><div><strong>End of tenancy</strong><p>A thorough moving clean for a completely empty property.</p></div></article>
+        <article><span>05</span><div><strong>After builders</strong><p>Specialist removal of renovation or construction dust and residue.</p></div></article>
+        <article><span>06</span><div><strong>Carpet or upholstery</strong><p>Specialist treatment for rugs, carpets and upholstered furniture.</p></div></article>
+        <article><span>07</span><div><strong>Tradesperson</strong><p>Repairs, installation or maintenance such as plumbing or electrical work.</p></div></article>
+      </div>
+      <div class="dialog-actions"><button class="primary-button" type="button" data-dialog-close="compare-dialog">Back to the finder</button></div>
+    </dialog>
+
+    <dialog id="copy-dialog" class="app-dialog copy-dialog" aria-labelledby="copy-title">
+      <div class="dialog-header">
+        <div><p class="step-kicker">Manual copy</p><h2 id="copy-title">Copy your booking brief</h2></div>
+        <button class="icon-button" type="button" data-dialog-close="copy-dialog" aria-label="Close copy dialog">×</button>
+      </div>
+      <p class="dialog-intro">Your browser blocked automatic clipboard access. Select the text below and copy it normally.</p>
+      <textarea id="copy-fallback-text" rows="14" readonly aria-label="Booking brief ready to copy"></textarea>
+      <div class="dialog-actions"><button class="primary-button" type="button" id="select-copy-text">Select all text</button></div>
+    </dialog>
+
+    <footer>
+      <p><strong>An independent guide.</strong> This site is not affiliated with or operated by Housekeep.</p>
+      <p>Service information comes from <a href="https://housekeep.com/" target="_blank" rel="noopener noreferrer">housekeep.com</a>. Check the official website for current details.</p>
+    </footer>
+
+    <script src="logic.js" defer></script>
+    <script src="app.js" defer></script>
+  </body>
+</html>
